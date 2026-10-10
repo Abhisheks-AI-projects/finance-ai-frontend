@@ -1,0 +1,160 @@
+/* Clerk component overrides — force full width on ALL elements */
+[class^="cl-"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+[class^="cl-internal-"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.cl-rootBox,
+.cl-signIn-root,
+.cl-signUp-root,
+.cl-cardBox,
+.cl-card,
+.cl-main,
+.cl-form {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.cl-formFieldInputGroup,
+.cl-formField__emailAddress,
+.cl-formField__password,
+.cl-formField__firstName,
+.cl-formField__lastName {
+  overflow: visible !important;
+}
+
+.cl-cardBox {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.cl-card {
+  box-shadow: none;
+  padding: 8px;
+  overflow: visible !important;
+}
+
+.cl-footerAction {
+  display: none;
+}
+
+/* Hide "Secured by Clerk" branding */
+.cl-internal-b3fm6y,
+.cl-internal-1dauvpw,
+.cl-footer,
+.cl-footerPages,
+.cl-footerPagesLink,
+.cl-internal-wkkub3,
+.cl-powered-by-clerk,
+[class*="cl-internal"] a[href*="clerk.com"],
+.cl-card > div:last-child a[href*="clerk.com"] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.cl-internal-l2l775,
+.cl-internal-pe6vm4,
+.cl-internal-tk30ch,
+.cl-internal-1fpq5at,
+div:has(> .cl-internal-1scq7x4),
+p[data-variant="buttonSmall"]:has(+ a[href*="clerk.com"]),
+a[href*="go.clerk.com"] {
+  display: none !important;
+}
+
+/* Input styling */
+.cl-formFieldInput.cl-input {
+  border-radius: 20px;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  outline-offset: -1px !important;
+  outline: none !important;
+}
+
+.cl-formFieldInput.cl-input:focus,
+.cl-formFieldInput.cl-input:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.cl-phoneInputBox {
+  border-radius: 20px;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+/* Button styling */
+.cl-button {
+  border-radius: 20px;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.cl-socialButtonsBlockButton {
+  border: 1px solid #E5E5E5 !important;
+  box-shadow: none !important;
+}
+
+.cl-formButtonPrimary {
+  background-color: #1A1A1A !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  border-radius: 9999px !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #333333 !important;
+}
+
+/* User button styling */
+.cl-userButtonTrigger {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.cl-userButtonBox {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cl-rootBox.cl-userButton-root {
+  width: auto !important;
+}
+
+.cl-userButtonTrigger .cl-userButtonOuterIdentifier {
+  display: none !important;
+}
+
+.cl-userButtonTrigger:focus,
+.cl-userButtonTrigger:focus-visible,
+.cl-userButtonTrigger:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.cl-userButtonAvatarBox,
+.cl-avatarBox.cl-userButtonAvatarBox {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.cl-avatarImage.cl-userButtonAvatarImage {
+  width: 40px !important;
+  height: 40px !important;
+}

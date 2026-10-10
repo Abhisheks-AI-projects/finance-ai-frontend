@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdfbf8;
+  --foreground: #242424;
+  --primary: #1A1A1A;
+  --primary-hover: #333333;
+  --secondary: #fdfbf8;
+  --accent: #10b981;
+  --danger: #ef4444;
+  --border: #E5E5E5;
+  --muted: #9A9A9A;
+  --card: #ffffff;
+  --ai-bubble: #FFFAF4;
+  --user-bubble: #ffffff;
+  --link: #3F65A9;
+  --input-border: #E3E3E3;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-ai-bubble: var(--ai-bubble);
+  --color-user-bubble: var(--user-bubble);
+  --color-link: var(--link);
+  --color-input-border: var(--input-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F1F1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D1D1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A1A1A1;
+}
+
+/* AI message markdown */
+/* Buttons */
+.btn-primary {
+  background: #0A0A0A !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  padding: 10px 14px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+}
+.btn-primary:hover {
+  background: #1A1A1A !important;
+}
+.btn-primary:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.btn-secondary {
+  background: #ffffff !important;
+  color: #1A1A1A !important;
+  border: 1px solid #D9D9D9 !important;
+  border-radius: 10px !important;
+  padding: 10px 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+}
+.btn-secondary:hover {
+  background: #F5F5F5 !important;
+  border-color: #BFBFBF !important;
+}
+.btn-secondary:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+/* AI message markdown */
+.ai-markdown table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 12px 0 !important;
+  font-size: 14px !important;
+  border: 1px solid #E5E5E5 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+}
+.ai-markdown th {
+  background: #F9F9F9 !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 10px 14px !important;
+  border: 1px solid #E5E5E5 !important;
+}
+.ai-markdown td {
+  padding: 10px 14px !important;
+  border: 1px solid #E5E5E5 !important;
+}
+.ai-markdown tr:last-child td {
+  font-weight: 600 !important;
+}
+.ai-markdown p {
+  margin: 6px 0 !important;
+}
+.ai-markdown ul, .ai-markdown ol {
+  margin: 6px 0 !important;
+  padding-left: 20px !important;
+}
+.ai-markdown li {
+  margin: 3px 0 !important;
+}
+.ai-markdown a {
+  color: #3F65A9 !important;
+  text-decoration: underline !important;
+}
+.ai-markdown code {
+  background: #F9F9F9 !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 13px !important;
+}
+.ai-markdown strong {
+  font-weight: 700 !important;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0; transform: scale(0.4); }
+  40% { opacity: 1; transform: scale(1); }
+}
+@layer utilities {
+  .dot-1 { animation: dot-pulse 0.8s ease-in-out infinite; }
+  .dot-2 { animation: dot-pulse 0.8s ease-in-out 0.15s infinite; }
+  .dot-3 { animation: dot-pulse 0.8s ease-in-out 0.3s infinite; }
 }
