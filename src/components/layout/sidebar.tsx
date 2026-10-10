@@ -135,9 +135,21 @@ export default function Sidebar() {
                   )}
                 >
                   <MessageSquare className="w-4 h-4 shrink-0" />
-                  <span className="truncate">
-                    {thread.title || "New Chat"}
-                  </span>
+                  <div className="truncate flex flex-col">
+                    <span className="truncate">
+                      {thread.title || "New Chat"}
+                    </span>
+                    <span className={clsx("text-[10px] font-normal", isActive ? "text-primary/60" : "text-foreground/50")}>
+                      {new Date(thread.created_at).toLocaleString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </span>
+                  </div>
                 </Link>
               );
             })}

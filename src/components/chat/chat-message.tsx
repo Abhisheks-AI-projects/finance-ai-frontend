@@ -2,6 +2,7 @@
 
 import { User } from "lucide-react";
 import AiIcon from "./animated-ai-icon";
+import DotsLoader from "./dots-loader";
 import { clsx } from "clsx";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -53,22 +54,20 @@ const markdownComponents: Components = {
       {children}
     </td>
   ),
-  p: ({ children }) => (
-    <p style={{ margin: "6px 0" }}>{children}</p>
-  ),
+  p: ({ children }) => <p style={{ margin: "6px 0" }}>{children}</p>,
   ul: ({ children }) => (
     <ul style={{ margin: "6px 0", paddingLeft: "20px", listStyleType: "disc" }}>
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol style={{ margin: "6px 0", paddingLeft: "20px", listStyleType: "decimal" }}>
+    <ol
+      style={{ margin: "6px 0", paddingLeft: "20px", listStyleType: "decimal" }}
+    >
       {children}
     </ol>
   ),
-  li: ({ children }) => (
-    <li style={{ margin: "3px 0" }}>{children}</li>
-  ),
+  li: ({ children }) => <li style={{ margin: "3px 0" }}>{children}</li>,
   strong: ({ children }) => (
     <strong style={{ fontWeight: 700 }}>{children}</strong>
   ),
@@ -100,7 +99,7 @@ export default function ChatMessage({
     <div
       className={clsx(
         "flex gap-3 px-4 py-3",
-        type === "user" ? "justify-end" : "justify-start"
+        type === "user" ? "justify-end" : "justify-start",
       )}
     >
       {type === "ai" && (
@@ -114,7 +113,7 @@ export default function ChatMessage({
           "rounded-2xl px-4 py-3 text-[15px] leading-[22px] border",
           type === "user"
             ? "max-w-[85%] md:max-w-[70%] bg-user-bubble border-border text-foreground rounded-br-md"
-            : "w-full bg-transparent border-0 text-foreground !p-0"
+            : "w-full bg-transparent border-0 text-foreground !p-0",
         )}
       >
         {type === "ai" ? (
@@ -125,19 +124,12 @@ export default function ChatMessage({
             >
               {content}
             </ReactMarkdown>
-            {isStreaming && (
-              <span className="inline-flex gap-[3px] ml-1 items-center align-middle">
-                <span className="w-[5px] h-[5px] rounded-full bg-foreground/60 dot-1" />
-                <span className="w-[5px] h-[5px] rounded-full bg-foreground/60 dot-2" />
-                <span className="w-[5px] h-[5px] rounded-full bg-foreground/60 dot-3" />
-              </span>
-            )}
+            {isStreaming && <DotsLoader className="ml-1" />}
           </>
         ) : (
           <p className="whitespace-pre-wrap font-medium">{content}</p>
         )}
       </div>
-
     </div>
   );
 }

@@ -17,6 +17,7 @@ interface ThreadState {
   threadsLoading: boolean;
   streaming: boolean;
   streamingContent: string;
+  titleLoading: boolean;
   error: string | null;
 }
 
@@ -28,6 +29,7 @@ const initialState: ThreadState = {
   threadsLoading: false,
   streaming: false,
   streamingContent: "",
+  titleLoading: false,
   error: null,
 };
 
@@ -93,6 +95,21 @@ const threadSlice = createSlice({
     },
     appendStreamContent: (state, action: PayloadAction<string>) => {
       state.streamingContent += action.payload;
+    },
+    setTitleLoading: (state, action: PayloadAction<boolean>) => {
+      state.titleLoading = action.payload;
+    },
+    updateThreadTitle: (
+      state,
+      action: PayloadAction<{ threadId: string; title: string }>
+    ) => {
+      const thread = state.threads.find(
+        (t) => t.thread_id === action.payload.threadId
+      );
+      if (thread) {
+        thread.title = action.payload.title;
+      }
+      state.titleLoading = false;
     },
     clearThread: (state) => {
       state.currentThreadId = null;
@@ -164,6 +181,8 @@ export const {
   addMessage,
   setStreaming,
   appendStreamContent,
+  setTitleLoading,
+  updateThreadTitle,
   clearThread,
 } = threadSlice.actions;
 export default threadSlice.reducer;

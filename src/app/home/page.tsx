@@ -7,10 +7,11 @@ import { useAuth } from "@clerk/nextjs";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   createThread,
-  sendMessage,
   setStreaming,
   appendStreamContent,
   addMessage,
+  setTitleLoading,
+  updateThreadTitle,
 } from "@/store/slices/threadSlice";
 import ChatInput from "@/components/chat/chat-input";
 
@@ -119,17 +120,65 @@ export default function HomePage() {
 
     const threadId = threadResult.payload.thread_id;
 
-    // Send message after thread is created
-    const result = await dispatch(sendMessage({ threadId, message }));
+    // Send message via SSE
+    dispatch(setTitleLoading(true));
+    const token = await getToken();
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-    if (sendMessage.fulfilled.match(result)) {
-      const messageId =
-        result.payload?.message?.message_id || Date.now().toString();
-      triggerAIResponse(messageId, threadId);
+    const response = await fetch(`${apiUrl}/thread/send-message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        thread_id: threadId,
+        message,
+        message_type: "user",
+      }),
+    });
+
+    if (!response.ok) {
+      dispatch(setTitleLoading(false));
+      return;
+    }
+
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    let messageId = "";
+
+    if (reader) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = decoder.decode(value);
+        const lines = text.split("\n");
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          try {
+            const parsed = JSON.parse(line.slice(6));
+            if (parsed.event_type === "message_added") {
+              dispatch(addMessage(parsed.message));
+              messageId = parsed.message.message_id;
+            }
+            if (parsed.event_type === "thread_title_generated") {
+              dispatch(updateThreadTitle({ threadId, title: parsed.title }));
+            }
+          } catch {
+            // skip non-JSON lines
+          }
+        }
+      }
     }
 
     // Navigate to the thread
     router.push(`/chat/${threadId}`);
+
+    if (messageId) {
+      triggerAIResponse(messageId, threadId);
+    }
   };
 
   return (
