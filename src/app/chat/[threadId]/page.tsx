@@ -15,7 +15,9 @@ import {
   setTitleLoading,
   updateThreadTitle,
 } from "@/store/slices/threadSlice";
+import { fetchDashboard, fetchTransactions } from "@/store/slices/transactionSlice";
 import DotsLoader from "@/components/chat/dots-loader";
+import AiIcon from "@/components/chat/animated-ai-icon";
 import ChatMessage from "@/components/chat/chat-message";
 import ChatInput from "@/components/chat/chat-input";
 
@@ -41,16 +43,23 @@ export default function ThreadPage() {
     !streaming &&
     lastMessage?.message_type === "user";
 
-  // Load thread data when auth is ready
+  // Load thread data when auth is ready (skip if already loaded from /chat page)
   useEffect(() => {
-    if (authReady && threadId) {
+    if (authReady && threadId && currentThreadId !== threadId) {
       dispatch(fetchThreadData(threadId));
     }
-  }, [threadId, authReady, dispatch]);
+  }, [threadId, authReady, dispatch, currentThreadId]);
+
+  useEffect(() => {
+    if (streaming && !streamingContent) {
+      // when streaming starts (analysing state), scroll to bottom
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [streaming, streamingContent]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamingContent]);
+  }, [messages]);
 
   // clear retry when streaming starts or component unmounts
   useEffect(() => {
@@ -152,6 +161,9 @@ export default function ThreadPage() {
         );
       } finally {
         dispatch(setStreaming(false));
+        // refresh dashboard & transactions after AI response (may have changed data)
+        dispatch(fetchDashboard());
+        dispatch(fetchTransactions());
       }
     },
     [dispatch, getToken]
@@ -277,6 +289,16 @@ export default function ThreadPage() {
                 content={msg.content}
               />
             ))}
+            {streaming && !streamingContent && (
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                  <AiIcon size={18} animated />
+                </div>
+                <span className="text-sm text-muted flex items-center gap-2">
+                  Analysing <DotsLoader />
+                </span>
+              </div>
+            )}
             {streaming && streamingContent && (
               <ChatMessage
                 type="ai"

@@ -73,7 +73,7 @@ export default function Sidebar() {
       {/* New Chat Button */}
       <div className="px-3 pt-3 pb-1 shrink-0">
         <Link
-          href="/home"
+          href="/chat"
           onClick={handleNewChat}
           className="btn-primary flex items-center gap-2 w-full !pl-3"
         >

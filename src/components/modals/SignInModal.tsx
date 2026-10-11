@@ -17,7 +17,7 @@ const SignInModal = () => {
   useEffect(() => {
     if (isSignedIn && isOpen) {
       dispatch(closeSignIn());
-      router.push("/home");
+      router.push("/chat");
     }
   }, [isSignedIn, isOpen, dispatch, router]);
 
@@ -31,8 +31,8 @@ const SignInModal = () => {
       <div className="p-6 md:px-10 md:py-10">
         <SignIn
           routing="hash"
-          forceRedirectUrl="/home"
-          signUpForceRedirectUrl="/home"
+          forceRedirectUrl="/chat"
+          signUpForceRedirectUrl="/chat"
           appearance={{
             elements: {
               rootBox: { width: "100%" },

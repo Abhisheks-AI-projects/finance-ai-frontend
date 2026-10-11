@@ -17,7 +17,7 @@ const SignUpModal = () => {
   useEffect(() => {
     if (isSignedIn && isOpen) {
       dispatch(closeSignUp());
-      router.push("/home");
+      router.push("/dashboard");
     }
   }, [isSignedIn, isOpen, dispatch, router]);
 
@@ -31,8 +31,8 @@ const SignUpModal = () => {
       <div className="p-6 md:px-10 md:py-10">
         <SignUp
           routing="hash"
-          forceRedirectUrl="/home"
-          signInForceRedirectUrl="/home"
+          forceRedirectUrl="/dashboard"
+          signInForceRedirectUrl="/dashboard"
           appearance={{
             elements: {
               rootBox: { width: "100%" },

@@ -1,12 +1,22 @@
 "use client";
 
-import { TrendingUp, TrendingDown, Wallet, Activity } from "lucide-react";
+import { TrendingUp, TrendingDown, Wallet, Activity, Target } from "lucide-react";
+
+interface Budget {
+  id: string;
+  amount: number;
+  spent: number;
+  remaining: number;
+  start_date: string;
+  end_date: string;
+}
 
 interface StatsCardsProps {
   totalIncome: number;
   totalExpense: number;
   balance: number;
   transactionCount: number;
+  budget?: Budget | null;
 }
 
 export default function StatsCards({
@@ -14,28 +24,42 @@ export default function StatsCards({
   totalExpense,
   balance,
   transactionCount,
+  budget,
 }: StatsCardsProps) {
+  const firstCard = budget
+    ? {
+        label: "Monthly Budget",
+        value: `₹${budget.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
+        sub: `${budget.start_date} — ${budget.end_date}`,
+        icon: Target,
+        color: "text-primary",
+        bg: "bg-primary/10",
+      }
+    : {
+        label: "Total Income",
+        value: `₹${totalIncome.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
+        icon: TrendingUp,
+        color: "text-accent",
+        bg: "bg-accent/10",
+      };
+
   const stats = [
-    {
-      label: "Total Income",
-      value: `$${totalIncome.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
-      icon: TrendingUp,
-      color: "text-accent",
-      bg: "bg-accent/10",
-    },
+    firstCard,
     {
       label: "Total Expenses",
-      value: `$${totalExpense.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      value: `₹${totalExpense.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
       icon: TrendingDown,
       color: "text-danger",
       bg: "bg-danger/10",
     },
     {
-      label: "Balance",
-      value: `$${balance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
+      label: budget ? "Remaining" : "Balance",
+      value: budget
+        ? `₹${budget.remaining.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`
+        : `₹${balance.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`,
       icon: Wallet,
-      color: "text-primary",
-      bg: "bg-primary/10",
+      color: (budget ? budget.remaining : balance) < 0 ? "text-danger" : "text-accent",
+      bg: (budget ? budget.remaining : balance) < 0 ? "bg-danger/10" : "bg-accent/10",
     },
     {
       label: "Transactions",
@@ -62,6 +86,9 @@ export default function StatsCards({
             </div>
           </div>
           <p className="text-2xl font-bold">{stat.value}</p>
+          {"sub" in stat && stat.sub && (
+            <p className="text-[10px] text-muted mt-1">{stat.sub}</p>
+          )}
         </div>
       ))}
     </div>

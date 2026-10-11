@@ -13,9 +13,11 @@ const placeholders = [
 interface ChatInputProps {
   onSend: (message: string) => void;
   disabled?: boolean;
+  prefill?: string;
+  onPrefillConsumed?: () => void;
 }
 
-export default function ChatInput({ onSend, disabled }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled, prefill, onPrefillConsumed }: ChatInputProps) {
   const [input, setInput] = useState("");
   const [focused, setFocused] = useState(false);
   const [placeholder, setPlaceholder] = useState("");
@@ -23,6 +25,15 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
   const [charIdx, setCharIdx] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (prefill) {
+      setInput(prefill);
+      setFocused(true);
+      onPrefillConsumed?.();
+      setTimeout(() => textareaRef.current?.focus(), 0);
+    }
+  }, [prefill, onPrefillConsumed]);
 
   useEffect(() => {
     if (input || focused) return; // stop animation when user is typing or focused

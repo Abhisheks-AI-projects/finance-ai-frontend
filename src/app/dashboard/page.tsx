@@ -2,32 +2,36 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Loader2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchUserMetadata } from "@/store/slices/authSlice";
+import { fetchDashboard, fetchTransactions } from "@/store/slices/transactionSlice";
 import { useAuthReady } from "@/components/auth-sync";
 import StatsCards from "@/components/dashboard/stats-cards";
 import RecentTransactions from "@/components/dashboard/recent-transactions";
+import BudgetCard from "@/components/dashboard/budget-card";
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
   const authReady = useAuthReady();
   const { user } = useAppSelector((state) => state.auth);
-  const { transactions } = useAppSelector((state) => state.transaction);
+  const { dashboard, transactions, loading } = useAppSelector((state) => state.transaction);
 
   useEffect(() => {
     if (authReady) {
       dispatch(fetchUserMetadata());
+      dispatch(fetchDashboard());
+      dispatch(fetchTransactions());
     }
   }, [dispatch, authReady]);
 
-  const totalIncome = transactions
-    .filter((t) => t.transaction_type === "income")
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpense = transactions
-    .filter((t) => t.transaction_type === "expense")
-    .reduce((sum, t) => sum + t.amount, 0);
+  if (loading && !dashboard) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-primary animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-4 md:p-6 space-y-4 md:space-y-6">
@@ -42,7 +46,7 @@ export default function DashboardPage() {
           </p>
         </div>
         <Link
-          href="/home"
+          href="/chat"
           className="btn-primary flex items-center gap-2"
         >
           <MessageSquare className="w-4 h-4" />
@@ -52,11 +56,15 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <StatsCards
-        totalIncome={totalIncome}
-        totalExpense={totalExpense}
-        balance={totalIncome - totalExpense}
-        transactionCount={transactions.length}
+        totalIncome={dashboard?.month_income ?? 0}
+        totalExpense={dashboard?.month_expense ?? 0}
+        balance={dashboard?.balance ?? 0}
+        transactionCount={dashboard?.transaction_count ?? 0}
+        budget={dashboard?.budget}
       />
+
+      {/* Budget */}
+      {dashboard?.budget && <BudgetCard budget={dashboard.budget} />}
 
       {/* Recent Transactions */}
       <RecentTransactions transactions={transactions} />

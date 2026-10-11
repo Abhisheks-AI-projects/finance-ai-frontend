@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, ShoppingCart, Wallet, BarChart3 } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
@@ -16,16 +16,17 @@ import {
 import ChatInput from "@/components/chat/chat-input";
 
 const suggestions = [
-  "I spent ₹500 on groceries today",
-  "Add income of ₹3000 salary for October",
-  "Show my transactions this month",
+  { text: "I spent ₹500 on groceries today", icon: ShoppingCart, color: "text-orange-500", bg: "bg-orange-50" },
+  { text: "Add income of ₹3000 salary for October", icon: Wallet, color: "text-green-500", bg: "bg-green-50" },
+  { text: "Show my transactions this month", icon: BarChart3, color: "text-blue-500", bg: "bg-blue-50" },
 ];
 
-export default function HomePage() {
+export default function ChatPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { getToken } = useAuth();
   const { streaming } = useAppSelector((state) => state.thread);
+  const [prefill, setPrefill] = useState("");
 
   const triggerAIResponse = useCallback(
     async (messageId: string, threadId: string) => {
@@ -173,8 +174,8 @@ export default function HomePage() {
       }
     }
 
-    // Navigate to the thread
-    router.push(`/chat/${threadId}`);
+    // Update URL without triggering full navigation
+    window.history.replaceState(null, "", `/chat/${threadId}`);
 
     if (messageId) {
       triggerAIResponse(messageId, threadId);
@@ -191,20 +192,23 @@ export default function HomePage() {
         <p className="text-muted text-sm max-w-md mb-6">
           I can help you track income and expenses. Try saying something like:
         </p>
-        <div className="space-y-2 w-full max-w-md">
+        <div className="grid gap-1.5 w-full max-w-md">
           {suggestions.map((suggestion) => (
             <button
-              key={suggestion}
-              onClick={() => handleSend(suggestion)}
+              key={suggestion.text}
+              onClick={() => setPrefill(suggestion.text)}
               disabled={streaming}
-              className="block w-full text-sm text-left bg-white border border-[#E5E5E5] rounded-xl px-4 py-3 hover:border-[#BFBFBF] hover:bg-[#FAFAFA] transition-all disabled:opacity-50"
+              className="flex items-center gap-3 w-full text-sm text-left bg-white border border-[#E5E5E5] rounded-xl px-3 py-2.5 cursor-pointer hover:border-primary/20 hover:bg-[#FAFAFA] transition-colors duration-150 disabled:opacity-50"
             >
-              &quot;{suggestion}&quot;
+              <span className={`${suggestion.bg} ${suggestion.color} w-8 h-8 rounded-lg flex items-center justify-center shrink-0`}>
+                <suggestion.icon className="w-4 h-4" />
+              </span>
+              <span className="text-foreground">{suggestion.text}</span>
             </button>
           ))}
         </div>
       </div>
-      <ChatInput onSend={handleSend} disabled={streaming} />
+      <ChatInput onSend={handleSend} disabled={streaming} prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
     </div>
   );
 }

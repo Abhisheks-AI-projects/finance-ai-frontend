@@ -21,8 +21,15 @@ export default function TransactionTable({
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden">
-      <table className="w-full">
+    <div className="bg-card border border-border rounded-xl flex flex-col h-full overflow-hidden">
+      <table className="w-full table-fixed">
+        <colgroup>
+          <col className="w-[15%]" />
+          <col className="w-[18%]" />
+          <col className="w-[30%]" />
+          <col className="w-[20%]" />
+          <col className="w-[17%]" />
+        </colgroup>
         <thead>
           <tr className="border-b border-border bg-secondary/50">
             <th className="text-left text-xs font-medium text-muted uppercase tracking-wider px-6 py-3">
@@ -42,6 +49,16 @@ export default function TransactionTable({
             </th>
           </tr>
         </thead>
+      </table>
+      <div className="flex-1 overflow-y-auto">
+      <table className="w-full table-fixed">
+        <colgroup>
+          <col className="w-[15%]" />
+          <col className="w-[18%]" />
+          <col className="w-[30%]" />
+          <col className="w-[20%]" />
+          <col className="w-[17%]" />
+        </colgroup>
         <tbody className="divide-y divide-border">
           {transactions.map((t) => (
             <tr key={t.id} className="hover:bg-secondary/30 transition-colors">
@@ -74,7 +91,16 @@ export default function TransactionTable({
                 {t.description || "-"}
               </td>
               <td className="px-6 py-4 text-sm text-muted">
-                {t.transaction_date}
+                <div>{new Date(t.transaction_date).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</div>
+                {t.created_at && (
+                  <div className="text-xs text-muted">
+                    {new Date(t.created_at).toLocaleTimeString("en-IN", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}
+                  </div>
+                )}
               </td>
               <td className="px-6 py-4 text-right">
                 <span
@@ -92,6 +118,7 @@ export default function TransactionTable({
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

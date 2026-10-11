@@ -23,6 +23,7 @@ export interface Transaction {
   category: string;
   description: string | null;
   transaction_date: string;
+  created_at: string | null;
 }
 
 export interface UserMetadata {

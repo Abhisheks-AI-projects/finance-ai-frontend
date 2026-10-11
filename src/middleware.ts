@@ -8,7 +8,7 @@ export default clerkMiddleware(async (auth, request) => {
 
   // Redirect signed-in users away from landing page to home
   if (userId && request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL("/chat", request.url));
   }
 
   // Redirect old sign-in/sign-up pages to landing
@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.redirect(new URL("/transactions", request.url));
   }
   if (request.nextUrl.pathname.startsWith("/dashboard/chat")) {
-    return NextResponse.redirect(new URL("/home", request.url));
+    return NextResponse.redirect(new URL("/chat", request.url));
   }
 
   // Protect non-public routes
